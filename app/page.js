@@ -10,32 +10,35 @@ const products = [
     id: 1,
     name: "New York",
     price: 25,
-    stripePriceId: "price_1Q5HGNFOQNBOjDBoIwAphPjq",
-    icon: "🍎", // Apple emoji for New York
+    // stripePriceId: "price_1Q5HGNFOQNBOjDBoIwAphPjq",
+    stripePriceId: "price_1Q0RCcFOQNBOjDBok9tLKmc3",
+    icon: "🍎",
   },
   {
     id: 2,
     name: "LA",
     price: 25,
-    stripePriceId: "price_1Q5HFUFOQNBOjDBoBbK7yA8N",
-    icon: "🎬", // Movie emoji for Los Angeles
+    // stripePriceId: "price_1Q5HFUFOQNBOjDBoBbK7yA8N",
+    stripePriceId: "price_1Q0REKFOQNBOjDBoARzVNljt",
+    icon: "🎬",
   },
   {
     id: 3,
     name: "Miami",
     price: 25,
-    stripePriceId: "price_1Q5HGvFOQNBOjDBoTNg4b0SV",
-    icon: "🌴", // Palm tree emoji for Miami
+    // stripePriceId: "price_1Q5HGvFOQNBOjDBoTNg4b0SV",
+    stripePriceId: "price_1Q0RDVFOQNBOjDBo0S4Eh7RY",
+    icon: "🌴",
   },
 ];
 
 export default function Home() {
   const { store, actions } = useContext(Context);
 
-  useEffect(() => {
-    console.log("Test log: The useEffect is running!");
-    console.log("Stripe Key:", process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
-  }, []);
+  // useEffect(() => {
+  //   console.log("Test log: The useEffect is running!");
+  //   console.log("Stripe Key:", process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+  // }, []);
 
   return (
     <div className={styles.page}>
@@ -47,7 +50,7 @@ export default function Home() {
             {store.cart.length > 0 && (
               <div className={styles.cartDropdown}>
                 {store.cart.map((item, index) => (
-                  <div key={index} className={styles.cartItem}>
+                  <div key={index} className={styles.cartItemH}>
                     {item.name} - ${item.price}
                     <span
                       className={styles.removeItem}
