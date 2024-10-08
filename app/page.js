@@ -1,95 +1,95 @@
-import Image from "next/image";
+"use client";
+import React, { useContext } from "react";
+import { Context } from "./context/appContext";
+import Link from "next/link";
 import styles from "./page.module.css";
+import Footer from "./components/footer";
+import BeachAccessIcon from "@mui/icons-material/BeachAccess";
+import AppleIcon from "@mui/icons-material/Apple";
+import LocationCityIcon from "@mui/icons-material/LocationCity";
+
+const products = [
+  {
+    id: 1,
+    name: "New York",
+    price: 25,
+    stripePriceId: "price_1Q5HGNFOQNBOjDBoIwAphPjq",
+    icon: <AppleIcon style={{ fontSize: 40, color: "red" }} />,
+  },
+  {
+    id: 2,
+    name: "LA",
+    price: 25,
+    stripePriceId: "price_1Q5HFUFOQNBOjDBoBbK7yA8N",
+    icon: <LocationCityIcon style={{ fontSize: 40, color: "gray" }} />,
+  },
+  {
+    id: 3,
+    name: "Miami",
+    price: 25,
+    stripePriceId: "price_1Q5HGvFOQNBOjDBoTNg4b0SV",
+    icon: <BeachAccessIcon style={{ fontSize: 40, color: "green" }} />,
+  },
+];
 
 export default function Home() {
+  const { store, actions } = useContext(Context);
+
   return (
     <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+      <div className={styles.limit}>
+        <div className={styles.cart}>
+          <div className={styles.cartIcon}>
+            {/* <Link href="/checkout" passHref> */}
+            🛒
+            {/* </Link> */}
+            {store.cart.length > 0}
+            {store.cart.length > 0 && (
+              <div className={styles.cartDropdown}>
+                {store.cart.map((item, index) => (
+                  <div key={index} className={styles.cartItem}>
+                    {item.name} - ${item.price}
+                    <span
+                      className={styles.removeItem}
+                      onClick={() => actions.removeFromCart(index)}
+                    >
+                      X
+                    </span>
+                  </div>
+                ))}
+                <Link href="/checkout" passHref>
+                  <button className={styles.checkoutGo}>Go to Checkout</button>
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        <div className={styles.productList}>
+          {products.map((product) => {
+            const isInCart = store.cart.some((item) => item.id === product.id);
+
+            return (
+              <div key={product.id} className={styles.product}>
+                <h2>{product.name}</h2>
+                {product.icon}
+                <p>Price: ${product.price}</p>
+                {isInCart ? (
+                  <span>This item is in your cart</span>
+                ) : (
+                  <button
+                    className={styles.addToCart}
+                    onClick={() => actions.addToCart(product)}
+                  >
+                    Add to cart
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <Footer />
     </div>
   );
 }
