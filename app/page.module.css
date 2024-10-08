@@ -460,9 +460,21 @@
 /* Terms */
 
 .termsPage {
-  max-width: 800px;
+  background-color: #fffdf3;
+  width: 100%;
   margin: 0 auto;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.termsPage div {
+  max-width: 500px;
+}
+
+.termsSection p {
+  text-align: justify;
 }
 
 .termsHeader {

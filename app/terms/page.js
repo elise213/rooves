@@ -9,6 +9,11 @@ const Terms = () => {
 
   return (
     <div className={styles.termsPage}>
+      <Link href="/">
+        <button className={styles.backButton}>
+          <span className={styles.arrow}>←</span> Back to Shop
+        </button>
+      </Link>
       <div className="termsHeader">
         <h1>Terms and Conditions for Annual Membership</h1>
         <p>Effective Date: October 1, 2022</p>
