@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Context } from "./context/appContext";
 import Link from "next/link";
 import styles from "./page.module.css";
@@ -31,6 +31,11 @@ const products = [
 
 export default function Home() {
   const { store, actions } = useContext(Context);
+
+  useEffect(() => {
+    console.log("Test log: The useEffect is running!");
+    console.log("Stripe Key:", process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+  }, []);
 
   return (
     <div className={styles.page}>
