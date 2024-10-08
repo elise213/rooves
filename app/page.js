@@ -4,9 +4,6 @@ import { Context } from "./context/appContext";
 import Link from "next/link";
 import styles from "./page.module.css";
 import Footer from "./components/footer";
-import BeachAccessIcon from "@mui/icons-material/BeachAccess";
-import AppleIcon from "@mui/icons-material/Apple";
-import LocationCityIcon from "@mui/icons-material/LocationCity";
 
 const products = [
   {
@@ -14,21 +11,21 @@ const products = [
     name: "New York",
     price: 25,
     stripePriceId: "price_1Q5HGNFOQNBOjDBoIwAphPjq",
-    icon: <AppleIcon style={{ fontSize: 40, color: "red" }} />,
+    icon: "🍎", // Apple emoji for New York
   },
   {
     id: 2,
     name: "LA",
     price: 25,
     stripePriceId: "price_1Q5HFUFOQNBOjDBoBbK7yA8N",
-    icon: <LocationCityIcon style={{ fontSize: 40, color: "gray" }} />,
+    icon: "🎬", // Movie emoji for Los Angeles
   },
   {
     id: 3,
     name: "Miami",
     price: 25,
     stripePriceId: "price_1Q5HGvFOQNBOjDBoTNg4b0SV",
-    icon: <BeachAccessIcon style={{ fontSize: 40, color: "green" }} />,
+    icon: "🌴", // Palm tree emoji for Miami
   },
 ];
 
@@ -40,9 +37,7 @@ export default function Home() {
       <div className={styles.limit}>
         <div className={styles.cart}>
           <div className={styles.cartIcon}>
-            {/* <Link href="/checkout" passHref> */}
             🛒
-            {/* </Link> */}
             {store.cart.length > 0}
             {store.cart.length > 0 && (
               <div className={styles.cartDropdown}>
@@ -72,7 +67,8 @@ export default function Home() {
             return (
               <div key={product.id} className={styles.product}>
                 <h2>{product.name}</h2>
-                {product.icon}
+                <div className={styles.productIcon}>{product.icon}</div>{" "}
+                {/* Display emoji */}
                 <p>Price: ${product.price}</p>
                 {isInCart ? (
                   <span>This item is in your cart</span>
