@@ -33,6 +33,7 @@ const Checkout = () => {
 
   const handleCheckout = async () => {
     const stripe = await stripePromise;
+
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/create-checkout-session`,
@@ -44,8 +45,8 @@ const Checkout = () => {
               id: item.id,
               quantity: 1,
             })),
-            success_url: `${window.location.origin}/success`,
-            cancel_url: `${window.location.origin}/checkout`,
+            success_url: window.location.origin + "/success",
+            cancel_url: window.location.origin + "/checkout",
           }),
         }
       );
@@ -55,9 +56,11 @@ const Checkout = () => {
       }
 
       const { id: sessionId } = await response.json();
+      console.log("Session ID received:", sessionId); // Add this log
+
       const { error } = await stripe.redirectToCheckout({ sessionId });
+
       if (error) {
-        console.error("Stripe checkout error:", error);
         Swal.fire({
           icon: "error",
           title: "Oops...",
