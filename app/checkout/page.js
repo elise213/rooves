@@ -32,19 +32,15 @@ const Checkout = () => {
     const stripe = await stripePromise;
 
     try {
-      // Request the session ID from the backend
-      // const response = await fetch(
-      //   "http://localhost:5000/create-checkout-session",
-      //   {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/create-checkout-session`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            line_items: store.cart.map((item) => ({
-              price: item.stripePriceId,
-              quantity: 1,
+            cart_items: store.cart.map((item) => ({
+              id: item.id,
+              quantity: 1, // Update quantity as needed
             })),
             success_url: window.location.origin + "/success",
             cancel_url: window.location.origin + "/checkout",
@@ -57,12 +53,9 @@ const Checkout = () => {
       }
 
       const { id: sessionId } = await response.json();
-
-      // Redirect to Stripe Checkout using the session ID
       const { error } = await stripe.redirectToCheckout({ sessionId });
 
       if (error) {
-        console.error("Stripe checkout error:", error);
         Swal.fire({
           icon: "error",
           title: "Oops...",
@@ -70,7 +63,6 @@ const Checkout = () => {
         });
       }
     } catch (error) {
-      console.error("Checkout error:", error);
       Swal.fire({
         icon: "error",
         title: "Oops...",
