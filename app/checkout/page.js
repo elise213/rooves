@@ -23,7 +23,10 @@ const Checkout = () => {
       "Stripe Key:",
       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "No Key Found"
     );
-    console.log(process.env.NEXT_PUBLIC_BACKEND_URL);
+    console.log(
+      "Backend URL:",
+      process.env.NEXT_PUBLIC_BACKEND_URL || "No backend Found"
+    );
     const total = store.cart.reduce((sum, item) => sum + item.price, 0);
     setTotalAmount(total);
   }, [store.cart]);
