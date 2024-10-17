@@ -2,34 +2,39 @@ import os
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import stripe
+from dotenv import load_dotenv
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.DEBUG)
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-# Set up Stripe with your secret key
+# Set the Stripe secret key
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
-print("Stripe API Key:", stripe.api_key)
-
 
 @app.route("/create-checkout-session", methods=["POST"])
 def create_checkout_session():
     try:
-        # Retrieve the items from the request
         data = request.json
+        logging.info("Received checkout session data: %s", data)
 
         # Create a checkout session
         session = stripe.checkout.Session.create(
             payment_method_types=["card"],
             line_items=data["line_items"],
-            mode="subscription",  # Change this to "subscription" for recurring payments
+            mode="subscription",
             success_url=data["success_url"],
-             cancel_url=data["cancel_url"] 
+            cancel_url=data["cancel_url"]
         )
         
-        # Return the session ID to the client
         return jsonify({"id": session.id})
     except Exception as e:
-        print("Error creating checkout session:", str(e))  # Log the error
+        logging.error("Error creating checkout session: %s", str(e))
         return jsonify(error=str(e)), 500
 
 if __name__ == "__main__":
