@@ -7,7 +7,7 @@
 }
 
 .checkoutPage {
-  height: calc(100% - 155px);
+  height: calc(100vh - 155px);
   background-color: #fffdf3;
   flex-direction: column;
   display: flex;

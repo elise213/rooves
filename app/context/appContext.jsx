@@ -19,7 +19,7 @@ const injectContext = (PassedComponent) => {
     );
 
     useEffect(() => {
-      // state.actions.loadData()
+      state.actions.loadCartFromSession();
     }, []);
 
     return (

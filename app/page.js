@@ -10,7 +10,9 @@ const products = [
     id: 1,
     name: "New York",
     price: 25,
+    //test
     // stripePriceId: "price_1Q5HGNFOQNBOjDBoIwAphPjq",
+    //live
     stripePriceId: "price_1Q0RCcFOQNBOjDBok9tLKmc3",
     icon: "🍎",
   },

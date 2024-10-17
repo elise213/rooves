@@ -30,25 +30,39 @@ const Checkout = () => {
   const handleCheckout = async () => {
     const stripe = await stripePromise;
 
-    const lineItems = store.cart.map((item) => ({
-      price: item.stripePriceId,
-      quantity: 1,
-    }));
-
     try {
-      const result = await stripe.redirectToCheckout({
-        lineItems,
-        mode: "subscription",
-        successUrl: window.location.origin + "/success",
-        cancelUrl: window.location.origin + "/",
-      });
+      // Request the session ID from the backend
+      const response = await fetch(
+        "http://localhost:5000/create-checkout-session",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            line_items: store.cart.map((item) => ({
+              price: item.stripePriceId,
+              quantity: 1,
+            })),
+            success_url: window.location.origin + "/success",
+            cancel_url: window.location.origin + "/checkout",
+          }),
+        }
+      );
 
-      if (result.error) {
-        console.error("Stripe error:", result.error);
+      if (!response.ok) {
+        throw new Error("Failed to create checkout session");
+      }
+
+      const { id: sessionId } = await response.json();
+
+      // Redirect to Stripe Checkout using the session ID
+      const { error } = await stripe.redirectToCheckout({ sessionId });
+
+      if (error) {
+        console.error("Stripe checkout error:", error);
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: result.error.message,
+          text: error.message,
         });
       }
     } catch (error) {
