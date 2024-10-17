@@ -6,9 +6,6 @@ import { Context } from "../context/appContext";
 import Swal from "sweetalert2";
 import styles from "../page.module.css";
 import Footer from "../components/footer";
-import BeachAccessIcon from "@mui/icons-material/BeachAccess"; // Palm Tree alternative
-import AppleIcon from "@mui/icons-material/Apple";
-import LocationCityIcon from "@mui/icons-material/LocationCity"; // Cityscape for LA
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
@@ -22,7 +19,10 @@ const Checkout = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    // Calculate total amount whenever the cart changes
+    // console.log(
+    //   "Stripe Key:",
+    //   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "No Key Found"
+    // );
     const total = store.cart.reduce((sum, item) => sum + item.price, 0);
     setTotalAmount(total);
   }, [store.cart]);
@@ -32,8 +32,11 @@ const Checkout = () => {
 
     try {
       // Request the session ID from the backend
+      // const response = await fetch(
+      //   "http://localhost:5000/create-checkout-session",
+      //   {
       const response = await fetch(
-        "http://localhost:5000/create-checkout-session",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/create-checkout-session`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -11,6 +11,7 @@
 
 # .gitignore
 .env
+.env.local
 
 
 # next.js
@@ -38,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local Netlify folder
+.netlify
