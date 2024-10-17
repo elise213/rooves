@@ -23,20 +23,21 @@ const Checkout = () => {
       "Stripe Key:",
       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "No Key Found"
     );
-    console.log(
-      "Backend URL:",
-      process.env.NEXT_PUBLIC_BACKEND_URL || "No backend Found"
-    );
+    // console.log(
+    //   "Backend URL:",
+    //   process.env.NEXT_PUBLIC_BACKEND_URL || "No backend Found"
+    // );
     const total = store.cart.reduce((sum, item) => sum + item.price, 0);
     setTotalAmount(total);
   }, [store.cart]);
+  ck;
 
   const handleCheckout = async () => {
     const stripe = await stripePromise;
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/create-checkout-session`,
+        `https://rooves-back.vercel.app/create-checkout-session`, // Hard-coded backend URL
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -56,7 +57,7 @@ const Checkout = () => {
       }
 
       const { id: sessionId } = await response.json();
-      console.log("Session ID received:", sessionId); // Add this log
+      console.log("Session ID received:", sessionId);
 
       const { error } = await stripe.redirectToCheckout({ sessionId });
 
