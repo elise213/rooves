@@ -43,7 +43,7 @@ const Checkout = () => {
               quantity: 1,
             })),
             success_url: window.location.origin + "/success",
-            cancel_url: window.location.origin + "/checkout",
+            cancel_url: window.location.origin + "/",
           }),
         }
       );
@@ -55,7 +55,12 @@ const Checkout = () => {
       const { id: sessionId } = await response.json();
       console.log("Session ID received:", sessionId);
 
+      console.log(
+        "Attempting to redirect to checkout with sessionId:",
+        sessionId
+      );
       const { error } = await stripe.redirectToCheckout({ sessionId });
+      console.log("Stripe redirect result:", error);
 
       if (error) {
         Swal.fire({
