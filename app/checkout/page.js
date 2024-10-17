@@ -30,7 +30,6 @@ const Checkout = () => {
 
   const handleCheckout = async () => {
     const stripe = await stripePromise;
-
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/create-checkout-session`,
@@ -40,10 +39,10 @@ const Checkout = () => {
           body: JSON.stringify({
             cart_items: store.cart.map((item) => ({
               id: item.id,
-              quantity: 1, // Update quantity as needed
+              quantity: 1,
             })),
-            success_url: window.location.origin + "/success",
-            cancel_url: window.location.origin + "/checkout",
+            success_url: `${window.location.origin}/success`,
+            cancel_url: `${window.location.origin}/checkout`,
           }),
         }
       );
@@ -54,8 +53,8 @@ const Checkout = () => {
 
       const { id: sessionId } = await response.json();
       const { error } = await stripe.redirectToCheckout({ sessionId });
-
       if (error) {
+        console.error("Stripe checkout error:", error);
         Swal.fire({
           icon: "error",
           title: "Oops...",
@@ -63,6 +62,7 @@ const Checkout = () => {
         });
       }
     } catch (error) {
+      console.error("Checkout error:", error);
       Swal.fire({
         icon: "error",
         title: "Oops...",
