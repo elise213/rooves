@@ -1,49 +1,36 @@
 "use client";
 import React, { useContext, useState, useEffect } from "react";
 import Link from "next/link";
-import { loadStripe } from "@stripe/stripe-js";
 import { Context } from "../context/appContext";
 import Swal from "sweetalert2";
 import styles from "../page.module.css";
 import Footer from "../components/footer";
-
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-);
 
 const Checkout = () => {
   const { store, actions } = useContext(Context);
   const [totalAmount, setTotalAmount] = useState(0);
   const [isChecked, setIsChecked] = useState(false);
 
-  const [errorMessage, setErrorMessage] = useState("");
-
   useEffect(() => {
-    console.log(
-      "Stripe Key:",
-      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "No Key Found"
-    );
-
     const total = store.cart.reduce((sum, item) => sum + item.price, 0);
     setTotalAmount(total);
   }, [store.cart]);
 
   const handleCheckout = async () => {
-    const stripe = await stripePromise;
-
     try {
       const response = await fetch(
-        `https://rooves-back.vercel.app/create-checkout-session`, // Hard-coded backend URL
+        "https://rooves-back.vercel.app/create-checkout-session",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             cart_items: store.cart.map((item) => ({
               id: item.id,
+              price_id: item.price_id, // Use the correct price ID
               quantity: 1,
             })),
             success_url: window.location.origin + "/success",
-            cancel_url: window.location.origin + "/",
+            cancel_url: window.location.origin + "/checkout",
           }),
         }
       );
@@ -52,23 +39,8 @@ const Checkout = () => {
         throw new Error("Failed to create checkout session");
       }
 
-      const { id: sessionId } = await response.json();
-      console.log("Session ID received:", sessionId);
-
-      console.log(
-        "Attempting to redirect to checkout with sessionId:",
-        sessionId
-      );
-      const { error } = await stripe.redirectToCheckout({ sessionId });
-      console.log("Stripe redirect result:", error);
-
-      if (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: error.message,
-        });
-      }
+      const { url } = await response.json(); // Get the session URL
+      window.location.href = url; // Redirect the user to the Stripe-hosted checkout page
     } catch (error) {
       console.error("Checkout error:", error);
       Swal.fire({
